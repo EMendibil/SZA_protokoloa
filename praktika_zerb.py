@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import socket, os, signal, select
+import socket, os, signal, select, random
 
 PORT = 50005
 MAX_BUF = 1024
@@ -16,14 +16,14 @@ while True:
 	buf, bez_helb = s.recvfrom( MAX_BUF )
 	if not buf:
 		continue
-	kodea = "00000"
+	
 	if not os.fork():
-		
+		kodea = randInt(10000, 99999)
 		s.close()
 		elkarrizketa = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 		elkarrizketa.connect( bez_helb )
 		while buf:
-			elkarrizketa.send( buf )
+			if buf.decode() ==  
 			jasoa, _, _ = select.select( [ elkarrizketa ], [], [], MAX_WAIT )
 			if not jasoa:
 				print( "Itxoite denbora maximoa ({} s.) agortuta. Bezeroa bukatutzat jo da.".format( MAX_WAIT ) )
