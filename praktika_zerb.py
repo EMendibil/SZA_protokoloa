@@ -4,7 +4,8 @@ import socket, os, signal, select
 
 PORT = 50005
 MAX_BUF = 1024
-MAX_WAIT = 120
+MAX_MEZU = 140
+MAX_WAIT = 999
 
 s = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
@@ -15,7 +16,9 @@ while True:
 	buf, bez_helb = s.recvfrom( MAX_BUF )
 	if not buf:
 		continue
+	kodea = "00000"
 	if not os.fork():
+		
 		s.close()
 		elkarrizketa = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 		elkarrizketa.connect( bez_helb )
