@@ -60,7 +60,7 @@ def registeruser(args):
 
 
 def validatecode(code, sentcode):
-    return "OK" if code == sentcode else "Segurtasun kode okerra" #ER05
+    return "OK" if code == sentcode and code != -1 else "Segurtasun kode okerra" #ER05
 
 
 def mezuabidali(info, sender):
@@ -68,7 +68,7 @@ def mezuabidali(info, sender):
         user = info[0]
         mssg = info[1]
         if len(mssg.encode()) <= 140:
-            file = open(f".users.txt", "r")
+            file = open(f".users.txt")
             lines = file.read().split("\n")
             exist = False
             for line in lines:
@@ -77,7 +77,7 @@ def mezuabidali(info, sender):
                     break
             if exist:
                 file = open(f".{user}.txt", "a")
-                file.write(f"{sender}#{mssg}")
+                file.write(f"{sender}#{mssg}\n")
                 file.close()
                 return "OK"
             else:
@@ -88,6 +88,23 @@ def mezuabidali(info, sender):
         return "Hautazko ez den parametro bat falta da" #ER03
     else:
         return "Espero ez zen parametroa. Parametro bat jaso da espero ez zen tokian" #ER02
+
+
+def mezuairakurri(user):
+    response = []
+    try:
+        file = open(f".{user}.txt")
+        mezuak = file.read().split("\n")
+        response.append(f"OK#{len(mezuak)-1}")
+        response = response + mezuak
+        return response
+    except FileNotFoundError:
+        response.append("OK#0")
+        return response
+
+
+def saioaitxi():
+    return -1
 
 
 if __name__ == "__main__":
@@ -109,7 +126,7 @@ if __name__ == "__main__":
             kodea = random.randint(10000, 99999)
 
             timer = Timer()
-            timer_thread=threading.Thread(target=timer.run,daemon=True)
+            timer_thread = threading.Thread(target=timer.run, daemon=True)
             timer_thread.start()
 
             elkarrizketa = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
