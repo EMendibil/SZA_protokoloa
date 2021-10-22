@@ -167,7 +167,7 @@ if __name__ == "__main__":
             elkarrizketa = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             elkarrizketa.connect(bez_helb)
             while buf:
-                splitBuf = buf.decode().split(" ")
+                splitBuf = buf.decode().split(" ", 1)
                 komandoa = splitBuf[0]
 
                 # print(komandoa)
