@@ -28,10 +28,11 @@ class Timer:
     def get_time(self):
         return self.time
 
+
 def id(args, timer):
     par = args[1]
     if len(par.split("#")) != 2:
-        return "ER02"
+        return "ER02", -1
     user = par.split("#")[0]
     password = par.split("#")[1]
     try:
@@ -49,11 +50,11 @@ def id(args, timer):
             timer_thread.start()
             kodea = random.randint(10000, 99999)
             msg = f"OK {kodea}#{MAX_WAIT}"
-            return msg
+            return msg, kodea
         else:
-            return "ER08"
+            return "ER08", -1
     except FileNotFoundError:
-        return "ER08"
+        return "ER08", -1
 
 
 
@@ -183,7 +184,7 @@ if __name__ == "__main__":
                     timer = Timer()
 
                 if komandoa == "ID" and kodea != -1:
-                    msg = id(splitBuf, timer)
+                    msg, kodea = id(splitBuf, timer)
                 elif komandoa == "RG":
                     msg = registeruser(splitBuf)
                 elif komandoa in ["MS", "RD", "XT"]:
