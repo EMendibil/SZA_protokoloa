@@ -7,7 +7,7 @@ from time import sleep
 PORT = 50006
 MAX_BUF = 1024
 MAX_MEZU = 140
-MAX_WAIT = 10
+MAX_WAIT = 60
 
 
 class Timer:
@@ -50,11 +50,11 @@ def id(args, timer):
             timer_thread.start()
             kodea = random.randint(10000, 99999)
             msg = f"OK {kodea}#{MAX_WAIT}"
-            return msg, kodea
+            return msg, kodea, user
         else:
-            return "ER08", -1
+            return "ER08", -1, user
     except FileNotFoundError:
-        return "ER08", -1
+        return "ER08", -1, user
 
 
 
@@ -90,7 +90,7 @@ def registeruser(args):
 
 
 def validatecode(code, sentcode):
-    if code == sentcode:
+    if code == int (sentcode):
         return "OK"
     elif code == -1:
         return "Not valid"
@@ -183,8 +183,11 @@ if __name__ == "__main__":
                     kodea = -1
                     timer = Timer()
 
-                if komandoa == "ID" and kodea != -1:
-                    msg, kodea = id(splitBuf, timer)
+                if komandoa == "ID":
+                    if kodea == -1:
+                        msg, kodea, usr = id(splitBuf, timer)
+                    else:
+                        msg = "ER12"
                 elif komandoa == "RG":
                     msg = registeruser(splitBuf)
                 elif komandoa in ["MS", "RD", "XT"]:
@@ -193,7 +196,7 @@ if __name__ == "__main__":
                         if komandoa == "MS":
                             msg = mezuabidali([splitBuf[1].split('#')[1], splitBuf[1].split('#')[2]], usr)
                         elif komandoa == "RD":
-                            if len(splitBuf) != 1:
+                            if len(splitBuf) != 2:
                                 msg = "ER02" #Espero ez zen parametroa. Parametro bat jaso da espero ez zen tokian
                             else:
                                 msg = mezuairakurri(usr)
@@ -201,7 +204,7 @@ if __name__ == "__main__":
                             kodea = -1
                             msg = "OK"
                     elif kodestatus == "Not valid":
-                        continue
+                        msg = "ER11"
                         #TODO
                         # Kodea ez da baliozkoa, erantzun bat eman behar da zerbitzaritik?
 
@@ -210,12 +213,16 @@ if __name__ == "__main__":
 
                 else:
                     msg = "ER01" #Komando ezezaguna
-                if komandoa == "RD":
-                    if len(msg) > 1:
-                        for mezua in msg:
-                            elkarrizketa.send(mezua.encode())
+                if "ER" not in msg:
+                    if komandoa == "RD":
+                        if len(msg) > 1:
+                            for mezua in msg:
+                                elkarrizketa.send(mezua.encode())
+                        else:
+                            elkarrizketa.send(msg[0].encode())
                     else:
-                        elkarrizketa.send(msg[0].encode())
+                        elkarrizketa.send(msg.encode())
+
                 else:
                     elkarrizketa.send(msg.encode())
                 jasoa, _, _ = select.select([elkarrizketa], [], [], 100)
