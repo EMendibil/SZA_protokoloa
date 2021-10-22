@@ -28,6 +28,8 @@ class Timer:
     def get_time(self):
         return self.time
 
+    def restart(self):
+        self.time = MAX_WAIT
 
 def id(args, timer):
     par = args[1]
@@ -210,7 +212,6 @@ if __name__ == "__main__":
 
                     else:
                         msg = kodestatus
-
                 else:
                     msg = "ER01" #Komando ezezaguna
                 if "ER" not in msg:
