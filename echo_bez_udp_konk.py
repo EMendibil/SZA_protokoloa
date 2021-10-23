@@ -27,7 +27,7 @@ while True:
 	mezua = input()
 	if not mezua:
 		break
-	print(s.send( mezua.encode() ))
+	s.send( mezua.encode() )
 	buf = s.recv( MAX_BUF )
 	if(mezua[:2]=="RD"):
 		if "ER" not in buf.decode():
