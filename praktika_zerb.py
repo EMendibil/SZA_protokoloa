@@ -56,14 +56,14 @@ def registeruser(args):
         else:
             users = []
             emails = []
-            open(".users.txt","a")
-            with open(".users.txt","r") as users_file:
+            open(".users.txt", "a")
+            with open(".users.txt", "r") as users_file:
                 for line in users_file:
                     elements=line.split(" ")
                     users.append(elements[0])
                     emails.append(elements[2].strip())
             if datuak[0] not in users and datuak[2] not in emails:
-                f = open(".users.txt","a")
+                f = open(".users.txt", "a")
                 f.write(datuak[0]+" "+datuak[1]+" "+datuak[2]+'\n')
                 f.close()
             elif datuak[0] in users:
@@ -186,8 +186,9 @@ if __name__ == "__main__":
                     elkarrizketa.send(msg.encode())
                 jasoa, _, _ = select.select([elkarrizketa], [], [], MAX_WAIT)
                 if not jasoa:
-                    print(f"Itxoite denbora maximoa ({MAX_WAIT} s.) agortuta. Kodea iraungita.")
-                    kodea = -1
+                    if kodea != -1:
+                        print(f"Itxoite denbora maximoa ({MAX_WAIT} s.) agortuta. Kodea iraungita.")
+                        kodea = -1
                 buf = elkarrizketa.recv(MAX_BUF)
             elkarrizketa.close()
             exit(0)
