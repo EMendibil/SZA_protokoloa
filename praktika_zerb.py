@@ -54,20 +54,19 @@ def registeruser(args):
         elif len(datuak) < 3:
             return "ER03" #Hautazkoa ez den parametro bat falta da.
         else:
-            existingusers = []
-            existingemails = []
+            users = []
+            emails = []
             open(".users.txt", "a")
-            f = open(".users.txt", "r")
-            lines = f.read().split("/n")
-            for line in lines:
-                if len(line.split(" ")) == 3:
-                    existingusers.append(line.split(" ")[0])
-                    existingemails.append(line.split(" ")[2])
-            if datuak[0] not in existingusers and datuak[2] not in existingemails:
+            with open(".users.txt", "r") as users_file:
+                for line in users_file:
+                    elements=line.split(" ")
+                    users.append(elements[0])
+                    emails.append(elements[2].strip())
+            if datuak[0] not in users and datuak[2] not in emails:
                 f = open(".users.txt", "a")
                 f.write(datuak[0]+" "+datuak[1]+" "+datuak[2]+'\n')
                 f.close()
-            elif datuak[0] in existingusers:
+            elif datuak[0] in users:
                 return "ER06" #Erabiltzailea dagoeneko existitzen da
             else:
                 return "ER07" #Emaila beste erabiltzaile bati dagokio
